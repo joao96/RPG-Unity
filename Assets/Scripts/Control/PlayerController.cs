@@ -7,11 +7,11 @@ namespace RPG.Control
     public class PlayerController : MonoBehaviour
     {
         //cached
-        Mover mover;
+        Mover _mover;
 
         void Start()
         {
-            mover = GetComponent<Mover>();
+            _mover = GetComponent<Mover>();
         }
 
         void Update()
@@ -22,6 +22,7 @@ namespace RPG.Control
 
         private bool InteractWithCombat()
         {
+            // to find an object that might be obscured by another
             RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
             
             foreach (RaycastHit hit in hits)
@@ -52,7 +53,7 @@ namespace RPG.Control
             {
                 if (Input.GetMouseButton(0))
                 {
-                    mover.MoveTo(hitInfo.point);
+                    _mover.StartMoveAction(hitInfo.point);
                 }
                 return true;
             }

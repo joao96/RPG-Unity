@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using RPG.Combat;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.Movement
@@ -19,9 +20,22 @@ namespace RPG.Movement
             UpdateAnimator();
         }
 
+        public void StartMoveAction(Vector3 destination)
+        {
+            // moving has priority over combat actions
+            GetComponent<Fighter>().Cancel();
+            MoveTo(destination);
+        }
+
         public void MoveTo(Vector3 destination)
         {
             _myNavMeshAgent.destination = destination;
+            _myNavMeshAgent.isStopped = false;
+        }
+
+        public void Stop()
+        {
+            _myNavMeshAgent.isStopped = true;
         }
 
         private void UpdateAnimator()
