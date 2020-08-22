@@ -1,18 +1,21 @@
-﻿using RPG.Combat;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
+
+using RPG.Core;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         NavMeshAgent _myNavMeshAgent;
         Animator _myAnimator;
+        ActionScheduler _actionScheduler;
 
         void Start()
         {
             _myNavMeshAgent = GetComponent<NavMeshAgent>();
             _myAnimator = GetComponent<Animator>();
+            _actionScheduler = GetComponent<ActionScheduler>();
         }
 
         void Update()
@@ -22,8 +25,7 @@ namespace RPG.Movement
 
         public void StartMoveAction(Vector3 destination)
         {
-            // moving has priority over combat actions
-            GetComponent<Fighter>().Cancel();
+            _actionScheduler.StartAction(this);
             MoveTo(destination);
         }
 
@@ -33,7 +35,7 @@ namespace RPG.Movement
             _myNavMeshAgent.isStopped = false;
         }
 
-        public void Stop()
+        public void Cancel()
         {
             _myNavMeshAgent.isStopped = true;
         }
