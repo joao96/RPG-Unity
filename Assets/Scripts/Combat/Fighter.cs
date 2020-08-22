@@ -7,56 +7,64 @@ namespace RPG.Combat
 {    
     public class Fighter : MonoBehaviour, IAction 
     {
-        [SerializeField] private float _weaponRange = 2f;
-        private Transform _target;
+        [SerializeField] private float weaponRange = 2f;
+        [SerializeField] private float timeBetweenAttacks = 1.25f;
+
+        private Transform target;
+        float timeSinceLastAttack = 0f;
 
         // cached
-        Mover _mover;
-        Animator _myAnimator;
-        ActionScheduler _actionScheduler;
+        Mover mover;
+        Animator myAnimator;
+        ActionScheduler actionScheduler;
 
         private void Start() 
         {
-            _mover = GetComponent<Mover>();
-            _myAnimator = GetComponent<Animator>();
-            _actionScheduler = GetComponent<ActionScheduler>();
+            mover = GetComponent<Mover>();
+            myAnimator = GetComponent<Animator>();
+            actionScheduler = GetComponent<ActionScheduler>();
         }
 
         private void Update()
         {
+            timeSinceLastAttack += Time.deltaTime;
             // if it's not fighting
-            if (_target == null) return;
+            if (target == null) return;
 
             if (!GetIsInRange())
             {
-                _mover.MoveTo(_target.position);
+                mover.MoveTo(target.position);
             }
             else
             {
-                _mover.Cancel();
+                mover.Cancel();
                 AttackBehaviour();
             }
         }
 
         private void AttackBehaviour()
         {
-            _myAnimator.SetTrigger("attack");
+            if (timeSinceLastAttack >= timeBetweenAttacks)
+            {
+                myAnimator.SetTrigger("attack");
+                timeSinceLastAttack = 0f;
+            }
         }
 
         private bool GetIsInRange()
         {
-            return Vector3.Distance(transform.position, _target.position) <= _weaponRange;
+            return Vector3.Distance(transform.position, target.position) <= weaponRange;
         }
 
         public void Attack(CombatTarget combatTarget)
         {
-            _actionScheduler.StartAction(this);
-            _target = combatTarget.transform;
+            actionScheduler.StartAction(this);
+            target = combatTarget.transform;
         }
 
         public void Cancel()
         {
-            _target = null;
+            target = null;
         }
 
         // Animation Event
