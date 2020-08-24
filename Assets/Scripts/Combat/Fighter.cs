@@ -47,6 +47,8 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
+            // look at the target
+            transform.LookAt(target.transform);
             if (timeSinceLastAttack >= timeBetweenAttacks)
             {
                 // will call the Hit() in the animation
