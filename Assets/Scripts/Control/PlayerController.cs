@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+
 using RPG.Movement;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
@@ -8,16 +10,20 @@ namespace RPG.Control
     {
         //cached
         Mover mover;
+        Health health;
         Fighter fighter;
 
         void Start()
         {
             mover = GetComponent<Mover>();
+            health = GetComponent<Health>();
             fighter = GetComponent<Fighter>();
         }
 
         void Update()
         {
+            if (health.IsDead()) return;
+
             if (InteractWithCombat()) return;
             if (InteractWithMovement()) return;
         }

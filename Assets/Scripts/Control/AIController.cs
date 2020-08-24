@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using RPG.Movement;
 using RPG.Combat;
+using RPG.Core;
+
 
 namespace RPG.Control
 {
@@ -9,6 +11,7 @@ namespace RPG.Control
         [SerializeField] float chaseDistance = 5f;
 
         Mover mover;
+        Health health;
         Fighter fighter;
         GameObject player;
 
@@ -16,11 +19,14 @@ namespace RPG.Control
         {
             mover = GetComponent<Mover>();
             fighter = GetComponent<Fighter>();
+            health = GetComponent<Health>();
             player = GameObject.FindWithTag("Player");
         }
 
         private void Update()
         {
+            if (health.IsDead()) return;
+
             if (PlayerIsInRange() && fighter.CanAttack(player))
             {
                 fighter.Attack(player);
@@ -30,7 +36,6 @@ namespace RPG.Control
                 fighter.Cancel();
             }
         }
-
 
         private bool PlayerIsInRange()
         {
