@@ -43,7 +43,8 @@ namespace RPG.Control
             return distanceToPlayer <= chaseDistance;
         }
 
-        void OnDrawGizmos()
+        // called by unity
+        private void OnDrawGizmosSelected() 
         {
             // Draw a blue sphere at the transform's position
             Gizmos.color = Color.blue;
