@@ -51,15 +51,22 @@ namespace RPG.Combat
             transform.LookAt(target.transform);
             if (timeSinceLastAttack >= timeBetweenAttacks)
             {
-                // will call the Hit() in the animation
-                myAnimator.SetTrigger("attack");
+                TriggerAttack();
                 timeSinceLastAttack = 0f;
             }
+        }
+
+        private void TriggerAttack()
+        {
+            myAnimator.ResetTrigger("stopAttack");
+            // will call the Hit() in the animation
+            myAnimator.SetTrigger("attack");
         }
 
         // Animation Event
         void Hit()
         {
+            if (target == null) return;
             target.TakeDamage(weaponDamage);
         }
 
@@ -87,8 +94,14 @@ namespace RPG.Combat
 
         public void Cancel()
         {
-            myAnimator.SetTrigger("stopAttack");
+            StopAttack();
             target = null;
+        }
+
+        private void StopAttack()
+        {
+            myAnimator.ResetTrigger("attack");
+            myAnimator.SetTrigger("stopAttack");
         }
     }
 }
