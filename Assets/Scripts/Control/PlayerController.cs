@@ -8,10 +8,12 @@ namespace RPG.Control
     {
         //cached
         Mover _mover;
+        Fighter _fighter;
 
         void Start()
         {
             _mover = GetComponent<Mover>();
+            _fighter = GetComponent<Fighter>();
         }
 
         void Update()
@@ -28,12 +30,12 @@ namespace RPG.Control
             foreach (RaycastHit hit in hits)
             {
                 CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-
-                if (target == null) continue;
+                
+                if (!_fighter.CanAttack(target)) continue;
                 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    GetComponent<Fighter>().Attack(target);
+                    _fighter.Attack(target);
                 }
                 // just hovering over the target OR is actively attacking it
                 // able to change the UI cursor, for example
