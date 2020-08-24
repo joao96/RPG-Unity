@@ -6,7 +6,12 @@ namespace RPG.Combat
         
         [SerializeField] float healthPoints = 10f;
 
-        bool isDead = false;
+        private bool isDead = false;
+
+        public bool IsDead()
+        {
+            return isDead;
+        }
 
         public void TakeDamage(float damage)
         {
