@@ -1,23 +1,29 @@
 ﻿using UnityEngine;
+
 using RPG.Movement;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control
 {
     public class PlayerController : MonoBehaviour
     {
         //cached
-        Mover _mover;
-        Fighter _fighter;
+        Mover mover;
+        Health health;
+        Fighter fighter;
 
         void Start()
         {
-            _mover = GetComponent<Mover>();
-            _fighter = GetComponent<Fighter>();
+            mover = GetComponent<Mover>();
+            health = GetComponent<Health>();
+            fighter = GetComponent<Fighter>();
         }
 
         void Update()
         {
+            if (health.IsDead()) return;
+
             if (InteractWithCombat()) return;
             if (InteractWithMovement()) return;
         }
@@ -31,11 +37,13 @@ namespace RPG.Control
             {
                 CombatTarget target = hit.transform.GetComponent<CombatTarget>();
                 
-                if (!_fighter.CanAttack(target)) continue;
+                if (target == null) continue;
+
+                if (!fighter.CanAttack(target.gameObject)) continue;
                 
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButton(0))
                 {
-                    _fighter.Attack(target);
+                    fighter.Attack(target.gameObject);
                 }
                 // just hovering over the target OR is actively attacking it
                 // able to change the UI cursor, for example
@@ -55,7 +63,7 @@ namespace RPG.Control
             {
                 if (Input.GetMouseButton(0))
                 {
-                    _mover.StartMoveAction(hitInfo.point);
+                    mover.StartMoveAction(hitInfo.point);
                 }
                 return true;
             }
