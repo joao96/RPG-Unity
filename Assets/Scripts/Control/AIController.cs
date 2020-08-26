@@ -10,10 +10,14 @@ namespace RPG.Control
     {
         [SerializeField] float chaseDistance = 5f;
 
+        //cached
         Mover mover;
         Health health;
         Fighter fighter;
         GameObject player;
+
+        //state -> the AI memory
+        Vector3 guardPosition;
 
         private void Start() 
         {
@@ -21,6 +25,8 @@ namespace RPG.Control
             fighter = GetComponent<Fighter>();
             health = GetComponent<Health>();
             player = GameObject.FindWithTag("Player");
+
+            guardPosition = transform.position;
         }
 
         private void Update()
@@ -33,7 +39,7 @@ namespace RPG.Control
             }
             else
             {
-                fighter.Cancel();
+                mover.StartMoveAction(guardPosition);
             }
         }
 
